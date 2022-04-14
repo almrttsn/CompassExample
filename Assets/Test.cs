@@ -4,63 +4,88 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    public enum Direction { North, East, South, West } //4 adet yön attık enum içine.
+    public enum Direction { North = 10, East, South, West } //4 adet yön attık enum içine.
     public Direction Dir => _direction; //bunu editörden bulabilmek için bu şekilde tanıttık.
 
     [SerializeField] private Direction _direction; //editördeki sekme.
+
+    private int _moveCode = ((int)Direction.North);
+
+    public int MoveCode
+    {
+        get
+        {
+            return _moveCode;
+        }
+        set
+        {
+            if(value > 9)
+            {
+                _moveCode = value - 5;
+            }
+            else
+            {
+                _moveCode = value;
+            }
+        }
+    }
+
+    private void Start()
+    {
+        Debug.Log("MoveCode is " + MoveCode);
+        Debug.Log("_moveCode is " + _moveCode);
+        Debug.Log(this._moveCode);
+    }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            MoveCodeInserter(((int)Direction.West));
+            MoveCodeInserter((Direction.West));
             Debug.Log(Direction.West);
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            MoveCodeInserter(((int)Direction.East));
+            MoveCodeInserter((Direction.East));
             Debug.Log(Direction.East);
         }
                                                         //enum'daki elemanların içlerinde sahip oldukları int değerlerini kullanarak PickMoveCode metodu ile
                                                         //objeyi hareket ettirdik.
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            MoveCodeInserter(((int)Direction.South));
+            MoveCodeInserter((Direction.South));
             Debug.Log(Direction.South);
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MoveCodeInserter(((int)Direction.North));
+            MoveCodeInserter((Direction.North));
             Debug.Log(Direction.North);
         }
 
         ElementValuePicker();
     }
-    private void MoveCodeInserter(int MoveCode)
+    private void MoveCodeInserter(Direction _givenDirection)
     {
-        if(MoveCode == 0)
+        switch (_givenDirection)
         {
-            transform.position = new Vector3(0, -5, 0);
+            case Direction.North:
+                transform.position = new Vector3(0, 5, 0);
+                break;
+            case Direction.East:
+                transform.position = new Vector3(5, 0, 0);
+                break;
+            case Direction.South:                                   //enum'dan gelen int değerleri ile hareket tanımladık.
+                transform.position = new Vector3(0, -5, 0);
+                break;
+            case Direction.West:
+                transform.position = new Vector3(-5, 0, 0);
+                break;
+            default:
+                break;
         }
-
-        if (MoveCode == 1)
-        {
-            transform.position = new Vector3(5, 0, 0);
-        }
-                                                            //enum'dan gelen int değerleri ile hareket tanımladık.
-        if (MoveCode == 2)
-        {
-            transform.position = new Vector3(0, 5, 0);
-        }
-
-        if (MoveCode == 3)
-        {
-            transform.position = new Vector3(-5, 0, 0);
-        }
-
-    }
+    }    
 
     private void ElementValuePicker()
     {
@@ -69,6 +94,8 @@ public class Test : MonoBehaviour
             Debug.Log(((int)_direction));       //enum'da seçili elemanın sahip olduğu int değerini yazdırdık. Editördeki sekmeye ulaştık.
         }
     }
+
+            
 
 
 
